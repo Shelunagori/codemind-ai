@@ -1,0 +1,39 @@
+{
+  "name": "@codemind/ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CodeMind's AI code: model calls, ATS scoring, tailoring, letters, interview prep, resume parsing and rendering, job enrichment.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./types.js": "./src/types.js",
+    "./text/*": "./src/text/*",
+    "./resume/*": "./src/resume/*"
+  },
+  "scripts": {
+    "lint": "eslint src examples",
+    "test": "node --test \"src/**/*.test.js\""
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "docx": "9.7.1",
+    "mammoth": "1.12.0",
+    "openai": "4.104.0",
+    "pdf-parse": "1.1.4",
+    "pdfkit": "0.17.2",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0",
+    "jszip": "3.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codemind-hq/codemind-ai.git"
+  },
+  "homepage": "https://github.com/codemind-hq/codemind-ai#readme"
+}

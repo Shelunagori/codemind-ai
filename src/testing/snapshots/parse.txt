@@ -1,0 +1,284 @@
+=== call 1 ===
+metered: {"kind":"resume_parse","promptVersion":"parseResume.v7","attempt":null,"ok":true,"flex":false}
+settings: {
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "none",
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "structured_resume",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "linkedin": {
+            "type": "string"
+          },
+          "github": {
+            "type": "string"
+          },
+          "portfolio": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "skillsHeading": {
+            "type": "string"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "skillGroups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "category",
+                "items"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "experience": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "company": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "period": {
+                  "type": "string"
+                },
+                "achievements": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "company",
+                "title",
+                "period",
+                "achievements"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "education": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "school": {
+                  "type": "string"
+                },
+                "degree": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "school",
+                "degree",
+                "location",
+                "year"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "period": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "highlights": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "role",
+                "period",
+                "link",
+                "highlights"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "certifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "issuer": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "issuer",
+                "year"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "achievements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "otherSections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "name",
+          "title",
+          "email",
+          "phone",
+          "location",
+          "linkedin",
+          "github",
+          "portfolio",
+          "summary",
+          "skillsHeading",
+          "skills",
+          "skillGroups",
+          "experience",
+          "education",
+          "projects",
+          "certifications",
+          "languages",
+          "achievements",
+          "otherSections"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
+--- system ---
+You convert resume text extracted from a PDF or DOCX file into JSON.
+Rules:
+- Copy the candidate's wording exactly. Never invent, summarize, reword, or translate.
+- The text may be out of order (columns, headers); put each piece in the section it belongs to.
+- Leave a field as "" or [] when the resume does not have it.
+- "achievements" holds resume-wide achievements, awards and honors, one per item. Bullets under a job stay in that job's achievements.
+- List items never start with a bullet symbol (•, -, *, ➤ and the like); drop it and keep the text.
+- Anything that fits no other field (publications, volunteering, interests...) goes in otherSections with its heading as title, so no content is lost.
+- In education, "school" is the institution's name and "location" is only the city written with it, never its state or country ("University of Texas, Austin, TX" → school "University of Texas", location "Austin"). A place that is part of the name stays in it ("University of Arkansas, Fayetteville" when no other place follows). Never repeat the place in both.
+- "skills" is one skill per item (split comma lists). "period" is the date range as written.
+- When the skills section lists skills under categories ("Languages: Python, Go"), put each category in skillGroups as { category, items } with one skill per item, list the same skills in "skills" too, and set skillsHeading to the section's heading as written ("Technical Proficiencies"). Otherwise skillGroups is [] and skillsHeading is "". A categorized skills section never goes in otherSections.
+- Headings may be in any language; map them by meaning, and keep the content in its own language. Experience: Berufserfahrung, Werdegang, expérience professionnelle, experiencia laboral, esperienza professionale, werkervaring, experiência profissional. Education: Ausbildung, Studium, formation, études, educación, formación, istruzione, formazione, opleiding, formação. Skills: Kenntnisse, Kompetenzen, compétences, habilidades, competencias, competenze, vaardigheden, competências. Summary: Profil, Kurzprofil, Zusammenfassung, profil professionnel, perfil, resumen, profilo, samenvatting, resumo. Projects: Projekte, projets, proyectos, progetti, projecten, projetos. Certifications: Zertifikate, certificats, certificaciones, certificazioni, certificados. Languages: Sprachen, langues, idiomas, lingue, talen, línguas. Achievements: Auszeichnungen, distinctions, premios, logros, premi, prêmios, conquistas.
+--- user ---
+Convert this resume into the structured resume form.
+
+RESUME:
+Jane Doe — Senior Data Engineer
+jane@example.com | (555) 010-2030 | Austin, Texas
+
+PROFESSIONAL SUMMARY
+Data engineer with 7 years of experience building batch and streaming pipelines.
+
+SKILLS
+Python, SQL, Airflow, Postgres, AWS
+
+EXPERIENCE
+Senior Data Engineer at Northwind | Mar 2021 – Present
+• Built the billing data pipeline on Airflow and AWS.
+• Cut nightly batch runtime from 6 hours to 90 minutes.
+• Defined the core data models for finance reporting.
+
+Data Engineer at Contoso | Jun 2018 – Feb 2021
+• Maintained ETL jobs in Python and SQL.
+• Moved reporting from cron scripts to Airflow.
+
+EDUCATION
+BS Computer Science — University of Texas, Austin — 2018
+
+LANGUAGES
+English
